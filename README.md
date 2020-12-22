@@ -55,4 +55,5 @@ paramTool
 ruleTool
 
 // 测试、异常处理、
+// 异常重试功能
 ```

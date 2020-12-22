@@ -1,18 +1,7 @@
-"use strict";
-var tree = {};
-var EventTree = /** @class */ (function () {
-    function EventTree() {
+var EventCore = (function () {
+    function EventCore() {
     }
-    EventTree.prototype.on = function (name, callback) {
-        tree[name] = callback;
-    };
-    EventTree.prototype.getPool = function () {
-        return tree;
-    };
-    EventTree.prototype.trigger = function (key) {
-        tree[key]();
-    };
-    return EventTree;
+    return EventCore;
 }());
-;
-module.exports = new EventTree();
+
+export default EventCore;
