@@ -49,7 +49,7 @@ eventCtrl.gc();
 
 eventCore
 EventNode
-Pipe  增强版队列
+Pipe  增强版队列 管道执行，参数传递机制
 
 paramTool
 ruleTool
