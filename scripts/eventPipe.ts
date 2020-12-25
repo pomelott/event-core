@@ -1,18 +1,18 @@
-export class EventPipe implements EventPipe {
+export class EventPipe{
   private pipe: Array<Function> = [];
   private mark: Array<Function> = [];
-  protected add (event: string, callback: Function): boolean {
+  add (event: string, callback: Function): boolean {
     return true;
   };
-  protected delete (event: string): boolean {
+  delete (event: string): boolean {
     return true;
   };
-  protected clear (): boolean {
+  clear (): boolean {
     return true;
   };
-  protected start (): void {};
-  protected stop (): void {};
-  protected listen (hook: string, callback: Function): boolean {
+  start (): void {};
+  stop (): void {};
+  listen (hook: string, callback: Function): boolean {
     return true;
   };
 }

@@ -1,7 +1,7 @@
 {
   "name": "event-core",
   "version": "1.0.0-alpha.0",
-  "main": "index.js",
+  "main": "eventCore.js",
   "repository": "https://github.com/pomelott/event-core.git",
   "homepage": "https://github.com/pomelott/event-core#readme",
   "author": "pomelott <pomelott@163.com>",
@@ -31,7 +31,11 @@
   ],
   "scripts": {
     "build": "yarn rollup -c",
-    "test:unit": "yarn jest --clearCache && yarn jest test/index.test.ts --type=unit"
+    "test": "yarn jest --clearCache && yarn jest test/index.test.ts",
+    "test:unit": "yarn test --type=unit"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@types/lodash": "^4.14.166",
+    "lodash": "^4.17.20"
+  }
 }

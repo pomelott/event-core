@@ -1,3 +1,6 @@
-export function unitTest () {
-  expect("a").toBe("a");
+import { deflate } from "zlib";
+
+import eventCoreTest from "./eventCore.test";
+export default () => {
+  eventCoreTest();
 }

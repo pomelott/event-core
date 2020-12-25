@@ -1,7 +1,7 @@
 import typescript from '@rollup/plugin-typescript';
 
 export default {
-  input: 'index.ts',
+  input: 'scripts/eventCore.ts',
   output: {
     dir: './',
     format: 'esm'
