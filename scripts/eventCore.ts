@@ -1,7 +1,7 @@
-import { CustomObject, Event, EventConf,EventTree} from "../typings/index";
+import { CustomObject, Event, EventCoreConfig, EventTree} from "../typings/index";
 // import { EventPipe } from "./types/pipe";
 import {EventPipe} from "./eventPipe";
-import {parseEventParam} from "./lib";
+import {parseEventParam, getTreeNodeChain} from "./lib";
 import _ from "lodash";
 
 // const pool:any = {
@@ -15,22 +15,15 @@ import _ from "lodash";
 //     }
 //   }
 // }
-
-function isEventPipe (arg: any): arg is EventPipe{
-  if (arg.add) {
-    return true;
-  }
-  return false;
-
-}
-
 export class EventCore {
 
   private root: EventTree = {};
-  private conf: EventConf = {};
+  private conf: EventCoreConfig = {
+    maxListeners: 10
+  };
 
 
-  constructor (conf: EventConf) {
+  constructor (conf: EventCoreConfig) {
     this.conf = conf;
   }
 
@@ -52,8 +45,8 @@ export class EventCore {
       let key = treeArr[i], temp: CustomObject = {};
       if (i === treeArr.length - 1) {
         targetTree[key] = {};
-        targetTree[key].pipe = new EventPipe();
-        targetTree[key].pipe.add(callback);
+        targetTree[key].pipe = new EventPipe(this.conf);
+        targetTree[key].pipe.add(key, callback);
         returnValue = targetTree[key].pipe;
       } else {
         temp = targetTree;
@@ -74,14 +67,16 @@ export class EventCore {
   private _bindItemEvent (eventItem: string, callback: Function): EventPipe {
     if (!this.root[eventItem]) {
       this.root[eventItem] = {
-        pipe: new EventPipe()
+        pipe: new EventPipe(this.conf)
       }
     }
+    this.root[eventItem].pipe.add(eventItem, callback);
    return this.root[eventItem].pipe;
   }
 
-  config (param: any): void {
 
+  config (param: EventCoreConfig): void {
+    this.conf = _.merge(this.conf, param);
   }
 
   on (event: Event, callback: Function): boolean {
@@ -95,12 +90,10 @@ export class EventCore {
     return true;
   }
 
-  extends (event: Event, callback: Function) {
-
-  }
-
-  trigger (event: Event): void {
-
+  async trigger (eventItem: string): Promise<any> {
+    let nodeChain = getTreeNodeChain(eventItem);
+    let targetNode = _.get(this.root, nodeChain);
+    return await targetNode.pipe.start();
   }
 
   once (event: Event): void {

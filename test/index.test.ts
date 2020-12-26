@@ -7,5 +7,5 @@ switch (argv.type) {
     break;
   default:
     unitTest();
-    break;
+    break;1
 }
