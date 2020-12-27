@@ -5,7 +5,7 @@
   "repository": "https://github.com/pomelott/event-core.git",
   "homepage": "https://github.com/pomelott/event-core#readme",
   "author": "pomelott <pomelott@163.com>",
-  "typings": "typings/eventCore.d.ts",
+  "typings": "types/eventCore.d.ts",
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.1.0",
