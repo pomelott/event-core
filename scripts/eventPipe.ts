@@ -54,18 +54,29 @@ export class EventPipe{
     this.conf = _.merge(this.conf, param)
   }
 
-  add (event: string, callback: Function): boolean {
+  add (eventItem: string, callback: Function): boolean {
     if (this.conf.maxListeners && this.mark.len() >= this.conf.maxListeners) {
       this.mark.pop();
       this.pipe.pop();
     }
-    this.mark.push(event);
+    if (this.mark.index(eventItem) !== -1) {
+      console.error(`${eventItem} has been added into the pipe !`)
+      return false;
+    }
+    this.mark.push(eventItem);
     this.pipe.push(callback);
     return true;
   };
 
-  delete (eventItem: string): boolean {
-    let idx = this.mark.index(eventItem);
+  delete (eventItem: string | number): boolean {
+    let idx: number;
+    if (typeof eventItem === typeof '') {
+      idx = this.mark.index(eventItem as string);
+    } else if (typeof eventItem === typeof 0) {
+      idx = eventItem as number;
+    } else {
+      return false;
+    }
     if (idx === -1) {
       return false;
     }
@@ -80,7 +91,7 @@ export class EventPipe{
     return true;
   };
 
-  async start (): Promise<any> {
+  async start (once?: boolean): Promise<any> {
     let result: Array<Promise<any>>= [];
     let midIdx: number = getPipeMiddleIdx(this.mark.len());
     this.pipe.each(async (item: Function, idx: number) => {
@@ -90,10 +101,13 @@ export class EventPipe{
         if (this.conf.beforeAll) {
           this.conf.beforeAll();
         }
-        if (this.conf.pipeMiddle) {
+        if (idx === midIdx && this.conf.pipeMiddle) {
           this.conf.pipeMiddle();
         }
         result.push(item());
+        if (once) {
+          this.delete(idx)
+        }
         this.activeIndex = idx;
         if (this.conf.afterAll) {
           this.conf.afterAll();

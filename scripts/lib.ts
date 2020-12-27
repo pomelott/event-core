@@ -8,6 +8,21 @@ export function getTreeNodeChain (eventItem: string): string {
   return eventItem.replace(reg, '.tree.');
 }
 
+export function getParentNodeChain (eventItem: string): string {
+  let tempArr: Array<string> | null;
+  let reg = /(?<=.*)(->\w+)/g;
+  tempArr = eventItem.match(reg);
+  if (tempArr) {
+    return eventItem.replace(tempArr[tempArr.length - 1], '')
+  }
+  // return '' when parent is root
+  return '';
+}
+
 export function getPipeMiddleIdx (len: number): number {
   return Math.floor(len / 2);
+}
+
+export function jsonString (obj: object): string {
+  return JSON.stringify(obj);
 }

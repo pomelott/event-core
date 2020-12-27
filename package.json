@@ -30,9 +30,9 @@
     "pipe"
   ],
   "scripts": {
-    "build": "yarn rollup -c",
-    "test": "yarn jest --clearCache && yarn jest test/index.test.ts",
-    "test:unit": "yarn test --type=unit"
+    "build": "npx rollup -c",
+    "test": "npx jest --clearCache && npx jest test/index.test.ts",
+    "test:unit": "npx test --type=unit"
   },
   "dependencies": {
     "@types/lodash": "^4.14.166",

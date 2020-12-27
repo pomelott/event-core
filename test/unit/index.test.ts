@@ -1,5 +1,5 @@
 
-import eventCoreTest from "./eventCore.test";
+import eventCoreTest from "./eventCore/index.test";
 export default () => {
   eventCoreTest();
 }
