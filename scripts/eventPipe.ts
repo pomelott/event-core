@@ -11,7 +11,7 @@ export class Queue<T> {
   }
 
   pop (): T | undefined {
-    return this.data.pop();
+    return this.data.shift();
   }
 
   front (): T | undefined {
@@ -50,7 +50,7 @@ export class EventPipe{
     maxListeners: 10
   };
 
-  constructor (param: EventCoreConfig) {
+  constructor (param?: EventCoreConfig) {
     this.conf = _.merge(this.conf, param)
   }
 
@@ -60,8 +60,7 @@ export class EventPipe{
       this.pipe.pop();
     }
     if (this.mark.index(eventItem) !== -1) {
-      console.error(`${eventItem} has been added into the pipe !`)
-      return false;
+      throw new Error(`${eventItem} has been added into the pipe !`);
     }
     this.mark.push(eventItem);
     this.pipe.push(callback);

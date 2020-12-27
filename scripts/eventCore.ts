@@ -3,6 +3,7 @@ import {EventPipe} from "./eventPipe";
 import {parseEventParam, getTreeNodeChain, getParentNodeChain} from "./lib";
 import _ from "lodash";
 import { Console } from "console";
+import { EventPipeConfig } from "../typings/eventPipe";
 export class EventCore {
 
   private root: EventTree = {};
@@ -23,8 +24,6 @@ export class EventCore {
   getConfig () {
     return this.conf;
   }
-
- 
 
   private _bindEvent (eventItem: string, callback: Function): EventPipe {
 
@@ -64,7 +63,7 @@ export class EventCore {
       this.root[mountPoint] = {};
     }
 
-    _.merge(this.root[mountPoint], {
+    this.root[mountPoint] = _.merge(this.root[mountPoint], {
       tree: targetTree
     })
     // console.log((this.root[mountPoint] as any).tree.calculate.pipe)
@@ -73,12 +72,12 @@ export class EventCore {
 
   private _bindItemEvent (eventItem: string, callback: Function): EventPipe {
     if (!this.root[eventItem] || !this.root[eventItem].pipe) {
-      _.merge(this.root[eventItem], {
+      this.root[eventItem] = _.merge(this.root[eventItem], {
         pipe: new EventPipe(this.conf)
       })
     }
     this.root[eventItem].pipe.add(eventItem, callback);
-   return this.root[eventItem].pipe;
+    return this.root[eventItem].pipe;
   }
 
   private _getTargetNodeFromChain (eventItem: string): EventNode {
@@ -137,4 +136,14 @@ export class EventCore {
     return this.root;
   }
 
+  getPipe (param?: string | EventPipeConfig): EventPipe | false {
+    if (typeof param === typeof '') {
+      let targetNode = this._getTargetNodeFromChain(param as string);
+      if (targetNode.pipe) {
+        return targetNode.pipe;
+      }
+      return false;
+    }
+    return new EventPipe(param as EventPipeConfig);
+  }
 }
