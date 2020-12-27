@@ -1,6 +1,6 @@
-import { EventCoreConfig } from "../typings/index";
+import { EventCoreConfig } from "../types/index";
 import _ from "lodash";
-import { EventPipeConfig, PipeListener } from "../typings/eventPipe";
+import { EventPipeConfig, PipeListener } from "../types/eventPipe";
 import {getPipeMiddleIdx} from "./lib"
 export class Queue<T> {
   private data: Array<T> = [];

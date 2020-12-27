@@ -1,9 +1,9 @@
-import { CustomObject, Event, EventCoreConfig, EventNode, EventTree} from "../typings/index";
+import { CustomObject, Event, EventCoreConfig, EventNode, EventTree} from "../types/index";
 import {EventPipe} from "./eventPipe";
 import {parseEventParam, getTreeNodeChain, getParentNodeChain} from "./lib";
 import _ from "lodash";
 import { Console } from "console";
-import { EventPipeConfig } from "../typings/eventPipe";
+import { EventPipeConfig } from "../types/eventPipe";
 export class EventCore {
 
   private root: EventTree = {};

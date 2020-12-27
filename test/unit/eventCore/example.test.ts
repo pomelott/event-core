@@ -1,6 +1,6 @@
 import {EventCore} from '../../../scripts/eventCore';
 import {EventPipe} from "../../../scripts/eventPipe";
-import { EventCoreConfig, EventTree } from '../../../typings';
+import { EventCoreConfig, EventTree } from '../../../types';
 
 export default () => {
   let core = new EventCore({});
