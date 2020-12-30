@@ -1,6 +1,12 @@
-import eventCoreExampleTest from './example.test';
-import eventCoreUnitTest from './unit.test';
+import onUnitTest from './on.test';
+import triggerUnitTest from './trigger.test';
+import gcUnitTest from './gc.test';
+import getTreeUnitTest from './getTree.test';
+import clearUnitTest from './clear.test';
 export default () => {
-  eventCoreUnitTest();
-  eventCoreExampleTest();
+  onUnitTest();
+  triggerUnitTest();
+  gcUnitTest();
+  getTreeUnitTest();
+  clearUnitTest();
 }

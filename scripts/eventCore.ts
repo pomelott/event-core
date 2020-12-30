@@ -1,8 +1,7 @@
-import { CustomObject, Event, EventCoreConfig, EventNode, EventTree} from "../types/index";
+import { CustomObject, Event, EventCoreConfig, EventNode, EventTree} from "../types/eventCore";
 import {EventPipe} from "./eventPipe";
 import {parseEventParam, getTreeNodeChain, getParentNodeChain} from "./lib";
 import _ from "lodash";
-import { Console } from "console";
 import { EventPipeConfig } from "../types/eventPipe";
 export class EventCore {
 
@@ -31,7 +30,7 @@ export class EventCore {
 
     if (treeArr.length > 1) {
       let targetNode = this._getTargetNodeFromChain(eventItem);
-      if (targetNode) {
+      if (targetNode &&  targetNode.pipe) {
         // on the same eventName with pipe
         targetNode.pipe.add(eventItem, callback);
         return targetNode.pipe;
@@ -41,6 +40,21 @@ export class EventCore {
     } else {
       return this._bindItemEvent(eventItem, callback);
     }
+  }
+
+  private _forEventNode (node: EventNode, callBack: Function) {
+
+    if (!node.tree) {
+      return;
+    }
+
+    for (let key in node.tree) {
+      callBack(key, node.tree[key])
+      if (node.tree[key].tree) {
+        this._forEventNode(node.tree[key], callBack);
+      }
+    }
+
   }
 
   private _bindTreeEvent (treeArr: string[], callback: Function): EventPipe {
@@ -56,7 +70,8 @@ export class EventCore {
       } else {
         temp = targetTree;
         targetTree = {};
-        targetTree[key].tree = targetTree;
+        targetTree[key] = {};
+        targetTree[key].tree = temp;
       }
     }
     if (!this.root[mountPoint]) {
@@ -76,8 +91,8 @@ export class EventCore {
         pipe: new EventPipe(this.conf)
       })
     }
-    this.root[eventItem].pipe.add(eventItem, callback);
-    return this.root[eventItem].pipe;
+    (this.root[eventItem].pipe as EventPipe).add(eventItem, callback);
+    return (this.root[eventItem].pipe as EventPipe);
   }
 
   private _getTargetNodeFromChain (eventItem: string): EventNode {
@@ -85,15 +100,16 @@ export class EventCore {
     return _.get(this.root, nodeChain);
   }
 
-  on (event: Event, callback: Function): boolean {
+  on (event: Event, callback: Function): Array<EventPipe> {
+    let pipeGroup: Array<EventPipe> = [];
     if (typeof event === 'string') {
-      this._bindEvent(event, callback);
+      pipeGroup.push(this._bindEvent(event, callback));
     } else {
       event.forEach((item: string) => {
-        this._bindEvent(item, callback);
+        pipeGroup.push(this._bindEvent(item, callback));
       })
     }
-    return true;
+    return pipeGroup;
   }
 
   async trigger (eventItem: string, once?: boolean): Promise<any> {
@@ -102,6 +118,21 @@ export class EventCore {
       return await targetNode.pipe.start(once);
     }
     return Promise.reject(false)
+  }
+
+  async triggerTree (eventItem: string, once?: boolean) {
+    let targetNode = this._getTargetNodeFromChain(eventItem),
+        pro: Array<Promise<any>> = [];
+    if (targetNode.pipe) {
+      pro.push(targetNode.pipe.start(once));
+    }
+    this._forEventNode(targetNode, async (key: string, node: EventNode) => {
+      if (node.pipe) {
+        let proItem = node.pipe.start(once);
+        pro.push(proItem);
+      }
+    })
+    return Promise.all(pro);
   }
 
   async once (eventItem: string): Promise<any> {

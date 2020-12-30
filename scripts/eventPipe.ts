@@ -1,4 +1,4 @@
-import { EventCoreConfig } from "../types/index";
+import { EventCoreConfig } from "../types/eventCore";
 import _ from "lodash";
 import { EventPipeConfig, PipeListener } from "../types/eventPipe";
 import {getPipeMiddleIdx} from "./lib"
@@ -36,6 +36,10 @@ export class Queue<T> {
     return this.data.length;
   }
 
+  item (index: number) {
+    return this.data[index];
+  }
+
   clear (): boolean {
     this.data.length = 0;
     return true;
@@ -54,14 +58,51 @@ export class EventPipe{
     this.conf = _.merge(this.conf, param)
   }
 
+  private async _exec (targetIndex: number, once?: boolean) {
+    let result: Array<Promise<any>>= [];
+    let midIdx: number = getPipeMiddleIdx(this.mark.len());
+    if (this.isStop) {
+      this.isStop = false;
+    }
+    await this.pipe.each(async (item: Function, idx: number) => {
+      if (idx >= targetIndex) {
+        if (this.isStop) {
+          return Promise.all(result);
+        } else {
+          this.activeIndex = idx + 1;
+          if (this.conf.beforeAll) {
+            this.conf.beforeAll();
+          }
+          if (idx === midIdx && this.conf.pipeMiddle) {
+            this.conf.pipeMiddle();
+          }
+          // result.push(await item()) is wrong
+          await result.push(item());
+          if (once) {
+            this.delete(idx)
+          }
+
+          if (this.conf.afterAll) {
+            this.conf.afterAll();
+          }
+        }
+      }
+    })
+    this.activeIndex = 0;
+    if (this.conf.pipeEnd) {
+      this.conf.pipeEnd();
+    }
+    return Promise.all(result);
+  }
+
   add (eventItem: string, callback: Function): boolean {
     if (this.conf.maxListeners && this.mark.len() >= this.conf.maxListeners) {
       this.mark.pop();
       this.pipe.pop();
     }
-    if (this.mark.index(eventItem) !== -1) {
-      throw new Error(`${eventItem} has been added into the pipe !`);
-    }
+    // if (this.mark.index(eventItem) !== -1) {
+    //   throw new Error(`${eventItem} has been added into the pipe !`);
+    // }
     this.mark.push(eventItem);
     this.pipe.push(callback);
     return true;
@@ -71,14 +112,18 @@ export class EventPipe{
     let idx: number;
     if (typeof eventItem === typeof '') {
       idx = this.mark.index(eventItem as string);
+      if (idx === -1) {
+        return false;
+      }
     } else if (typeof eventItem === typeof 0) {
       idx = eventItem as number;
+      if (!this.mark.item(idx)) {
+        return false;
+      }
     } else {
       return false;
     }
-    if (idx === -1) {
-      return false;
-    }
+
     this.mark.del(idx);
     this.pipe.del(idx);
     return true;
@@ -90,42 +135,10 @@ export class EventPipe{
     return true;
   };
 
-  async start (once?: boolean): Promise<any> {
-    let result: Array<Promise<any>>= [];
-    let midIdx: number = getPipeMiddleIdx(this.mark.len());
-    this.pipe.each(async (item: Function, idx: number) => {
-      if (this.isStop) {
-        return;
-      } else {
-        if (this.conf.beforeAll) {
-          this.conf.beforeAll();
-        }
-        if (idx === midIdx && this.conf.pipeMiddle) {
-          this.conf.pipeMiddle();
-        }
-        result.push(item());
-        if (once) {
-          this.delete(idx)
-        }
-        this.activeIndex = idx;
-        if (this.conf.afterAll) {
-          this.conf.afterAll();
-        }
-      }
-    })
-    return new Promise((resolve, reject) => {
-      Promise.all(result).then((msg) => {
-        if (this.conf.pipeEnd) {
-          this.conf.pipeEnd();
-        }
-        resolve(msg)
-      }).catch((err) => {
-        if (this.conf.pipeError) {
-          this.conf.pipeError();
-        }
-        reject(err);
-      })
-    })
+
+  async start (once?: boolean) {
+    let result = await this._exec(this.activeIndex, once);
+    return result;
   };
 
   stop (): void {
@@ -139,4 +152,13 @@ export class EventPipe{
     this.conf[hook] = callback;
     return true;
   };
+
+  getPipeLength (): number {
+    return this.pipe.len();
+  }
+
+  reset () {
+    this.activeIndex = 0;
+    this.isStop = false;
+  }
 }

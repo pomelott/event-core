@@ -1,4 +1,4 @@
-import {eventTreeSplitChar} from  "./const";
+import {eventTreeSplitChar} from './const';
 export function parseEventParam (eventItem: string) {
   return eventItem.split(eventTreeSplitChar);
 }
@@ -10,7 +10,8 @@ export function getTreeNodeChain (eventItem: string): string {
 
 export function getParentNodeChain (eventItem: string): string {
   let tempArr: Array<string> | null;
-  let reg = /(?<=.*)(->\w+)/g;
+  // reg = /(?<=.*)(->\w+)/g;
+  let reg = new RegExp(`\(\?\<\=\.\*\)\(${eventTreeSplitChar}\\w\+\)`, 'g');
   tempArr = eventItem.match(reg);
   if (tempArr) {
     return eventItem.replace(tempArr[tempArr.length - 1], '')

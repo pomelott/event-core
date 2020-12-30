@@ -1,25 +1,24 @@
 {
   "name": "event-core",
   "version": "1.0.0-alpha.0",
-  "main": "eventCore.js",
+  "main": "dist/eventCore.js",
   "repository": "https://github.com/pomelott/event-core.git",
   "homepage": "https://github.com/pomelott/event-core#readme",
   "author": "pomelott <pomelott@163.com>",
-  "typings": "types/eventCore.d.ts",
+  "typings": "types/index.d.ts",
   "license": "MIT",
   "devDependencies": {
-    "@rollup/plugin-typescript": "^8.1.0",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
     "@types/jest": "^26.0.19",
-    "@types/node": "^14.14.12",
+    "@types/lodash": "^4.14.166",
     "jest": "^26.6.3",
     "rollup": "^2.35.1",
+    "rollup-plugin-typescript2": "^0.29.0",
     "ts-jest": "^26.4.4",
     "ts-node": "^9.1.1",
     "tslib": "^2.0.3",
     "typescript": "^4.1.3"
-  },
-  "engines": {
-    "node": ">=12.18.4"
   },
   "keywords": [
     "eventEmitter",
@@ -31,11 +30,11 @@
   ],
   "scripts": {
     "build": "npx rollup -c",
-    "test": "npx jest --clearCache && npx jest test/index.test.ts",
-    "test:unit": "npx test --type=unit"
+    "test": "npx jest --clearCache && npx jest test/index.test.ts --detectOpenHandles",
+    "test:unit": "npx jest --clearCache && npx jest test/index.test.ts --detectOpenHandles --type=unit",
+    "test:e2e": "npx jest --clearCache && npx jest test/index.test.ts --detectOpenHandles --type=e2e"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.166",
     "lodash": "^4.17.20"
   }
 }
