@@ -1,59 +1,80 @@
-# event-core
+# event-emitter-tree
 
 event emitter of tree shape, offer pipe operation.
+## Feature
+
+* support typescript
+* event of tree shape
+* trigger eventItem or trigger eventTree flexibly
+* pipe operation
+
+## Doc
+
+* will be published soon
+
+## Install
+
+```bash
+  yarn add event-emitter-tree
+  npm i event-emitter-tree
+```
+
+## Use
+
+* use with esm
 
 ```js
-eventCore.config({
-  maxListener: 10,
-  beforeAll () {},
-  afterAll () {},
-  err () {}
-})
+  import {EventCore} from 'event-emitter-tree';
+```
 
-let eventNodeProject = eventCore.on("project1", () => {});
-let eventNodeTask = eventNodeProject.extends("task1", () => {});
-eventNodeTask.extends("step1", () => {})
+* use with commonjs
 
+```js
+  const {EventCore} = require('event-emitter-tree');
+```
 
-eventCore.on("project1->task1", () => {})
-eventCore.on("project1->task1->step1", () => {})
+## Description
 
-eventCore.beforeNot("project1->task1", () = {})
-eventCore.afterNot(["project1->task1", "project1->task2"], () = {})
+* the tree forked by a string `->`
+* take pe for an example, if you bind event `pe`,`pe->basketball`, `pe->basketball->shooting`, `pe->football->defence`, then you can trigger on of them or a tree flexibly.
+* bind Event:
 
-eventCore.on("task1", () => {});
-eventCore.on(["task1", "task2", "task3"], () => {})
-eventCore.getTree();
+```js
+  let core = new EventCore();
+  core.on('pe', fnPe);
+  core.on('pe->basketball', fnPeBasketball);
+  core.on('pe->basketball->shooting', fnPeBasketballShooting);
+  core.on('pe->football->defence', fnPeFootballDefence);
+```
 
-let pipe = eventRegister.getPipe("project1->task1");
-pipe.add("step2", () => {})
-pipe.add("step3", () => {})
+* the eventTree would be as follows:
 
-pipe.on("pipeEnd", () => {})
-pipe.on("pipeMiddle", () => {})
-pipe.on("pipeBlocked", () => {})
-pipe.on("pipeStopped", () => {})
-pipe.on("err", () => {})
-pipe.start();
-pipe.stop();
-pipe.delete("step2");
-pipe.clear();
+```js
+{
+  pipe: pipePe,
+  tree: {
+    basketball: {
+      pipe: pipePeBasketball,
+      tree: {
+        shooting: {
+          pipe: pipePeBasketballShooting
+        }
+      }
+    },
+    football: {
+      tree: {
+        defence: {
+          pipe: pipePeFootballDefence
+        }
+      }
+    }
+  }
+}
+```
 
-pipe.concat(pip2);
+* you can trigger eventItem or eventTree
 
-eventCore.trigger();
-eventCore.once();
-
-eventCtrl.gc();
-
-
-eventCore
-EventNode
-Pipe  增强版队列 管道执行，参数传递机制
-
-paramTool
-ruleTool
-
-// 测试、异常处理、
-// 异常重试功能
+```js
+  core.trigger('pe->basketball');
+  core.triggerTree('pe')
 ```

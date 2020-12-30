@@ -1,4 +1,4 @@
-import { CustomObject, Event, EventCoreConfig, EventNode, EventTree} from "../types/eventCore";
+import { CustomObject, BindEventType, EventCoreConfig, EventNode, EventTree} from "../types/eventCore";
 import {EventPipe} from "./eventPipe";
 import {parseEventParam, getTreeNodeChain, getParentNodeChain} from "./lib";
 import _ from "lodash";
@@ -100,7 +100,7 @@ export class EventCore {
     return _.get(this.root, nodeChain);
   }
 
-  on (event: Event, callback: Function): Array<EventPipe> {
+  on (event: BindEventType, callback: Function): Array<EventPipe> {
     let pipeGroup: Array<EventPipe> = [];
     if (typeof event === 'string') {
       pipeGroup.push(this._bindEvent(event, callback));

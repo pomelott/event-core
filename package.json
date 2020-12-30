@@ -1,7 +1,7 @@
 {
-  "name": "event-core",
-  "version": "1.0.0-alpha.0",
-  "main": "dist/eventCore.js",
+  "name": "event-emitter-tree",
+  "version": "1.0.0-alpha.2",
+  "main": "dist/event-emitter-tree.js",
   "repository": "https://github.com/pomelott/event-core.git",
   "homepage": "https://github.com/pomelott/event-core#readme",
   "author": "pomelott <pomelott@163.com>",
@@ -20,8 +20,12 @@
     "tslib": "^2.0.3",
     "typescript": "^4.1.3"
   },
+  "engines": {
+    "node": ">=12.18.4"
+  },
   "keywords": [
     "eventEmitter",
+    "eventEmitterTree",
     "eventCore",
     "eventTree",
     "event",

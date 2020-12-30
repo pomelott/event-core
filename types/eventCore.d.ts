@@ -1,6 +1,4 @@
 import { EventPipe } from "../scripts/eventPipe";
-
-
 export interface EventCoreConfig {
   maxListeners?: number;
   beforeAll?: Function;
@@ -22,7 +20,7 @@ export type EventTree = {
   [key:string]: EventNode
 }
 
-export type Event = string | string[];
+export type BindEventType = string | string[];
 
 
 

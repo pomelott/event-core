@@ -7,7 +7,7 @@ export default [{
   input: 'scripts/eventCore.ts',
   external: ['lodash'],
   output: {
-    file: "./dist/eventCore.js",
+    file: "./dist/event-emitter-tree.js",
     format: 'cjs',
   },
   plugins: [
@@ -19,7 +19,7 @@ export default [{
   input: 'scripts/eventCore.ts',
   external: ['lodash'],
   output: {
-    file: "./dist/eventCore.esm.js",
+    file: "./dist/event-emitter-tree.esm.js",
     format: 'esm',
   },
   plugins: [
@@ -30,7 +30,7 @@ export default [{
 },{
   input: 'scripts/eventCore.ts',
   output: {
-    file: "./dist/eventCore.umd.js",
+    file: "./dist/event-emitter-tree.umd.js",
     format: 'umd',
     name: "coreEvent"
   },
