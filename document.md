@@ -1,5 +1,7 @@
 # event-emitter-tree
 
+event emitter of tree shape, offer pipe operation ! welcome to start !
+
 ## EventCore
 
 ```js
