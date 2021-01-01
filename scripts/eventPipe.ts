@@ -137,8 +137,16 @@ export class EventPipe{
 
 
   async start (once?: boolean) {
-    let result = await this._exec(this.activeIndex, once);
-    return result;
+    try {
+      let result = await this._exec(this.activeIndex, once);
+      return result;
+    } catch (err) {
+      if (this.conf.error) {
+        this.conf.error(err);
+      } else {
+        throw err;
+      }
+    }
   };
 
   stop (): void {

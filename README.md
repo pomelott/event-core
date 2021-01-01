@@ -1,16 +1,17 @@
 # event-emitter-tree
 
 event emitter of tree shape, offer pipe operation.
+
 ## Feature
 
-* support typescript
 * event of tree shape
-* trigger eventItem or trigger eventTree flexibly
+* trigger eventItem and trigger eventTree
 * pipe operation
+* support typescript
 
 ## Doc
 
-* will be published soon
+* [doculment click here](), welcome to start !
 
 ## Install
 

@@ -3,7 +3,7 @@ export interface EventCoreConfig {
   maxListeners?: number;
   beforeAll?: Function;
   afterAll?: Function;
-  err?: Function;
+  error?: Function;
 }
 export interface CustomObject {
   [key:string]: any

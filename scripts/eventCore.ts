@@ -43,18 +43,15 @@ export class EventCore {
   }
 
   private _forEventNode (node: EventNode, callBack: Function) {
-
     if (!node.tree) {
       return;
     }
-
     for (let key in node.tree) {
       callBack(key, node.tree[key])
       if (node.tree[key].tree) {
         this._forEventNode(node.tree[key], callBack);
       }
     }
-
   }
 
   private _bindTreeEvent (treeArr: string[], callback: Function): EventPipe {
@@ -139,11 +136,7 @@ export class EventCore {
     return await this.trigger(eventItem, true);
   }
 
-  clear () {
-    this.root = {};
-  }
-
-  gc (eventItem: string) {
+  gc (eventItem: string): boolean {
     try {
       let treeArr = parseEventParam(eventItem),
           lastNodeName = treeArr[treeArr.length - 1];
@@ -157,10 +150,15 @@ export class EventCore {
         // gc on root
         delete this.root[lastNodeName]
       }
+      return true;
     } catch (err) {
       console.error(err);
       return false;
     }
+  }
+
+  clear () {
+    this.root = {};
   }
 
   getTree (): EventTree {

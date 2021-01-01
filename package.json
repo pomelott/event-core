@@ -1,6 +1,6 @@
 {
   "name": "event-emitter-tree",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0",
   "main": "dist/event-emitter-tree.js",
   "repository": "https://github.com/pomelott/event-core.git",
   "homepage": "https://github.com/pomelott/event-core#readme",
