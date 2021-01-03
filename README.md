@@ -11,7 +11,7 @@ event emitter of tree shape, offer pipe operation.
 
 ## Doc
 
-* [doculment click here](https://github.com/pomelott/event-emitter-tree/blob/master/document.md), welcome to start !
+* [doculment click here](https://github.com/pomelott/event-emitter-tree/blob/master/document.md), welcome to star & issue!
 
 ## Install
 
