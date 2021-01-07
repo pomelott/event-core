@@ -37,7 +37,7 @@ event emitter of tree shape, offer pipe operation.
 ## Description
 
 * the tree forked by a string `->`
-* take pe for an example, if you bind event `pe`,`pe->basketball`, `pe->basketball->shooting`, `pe->football->defence`, then you can trigger on of them or a tree flexibly.
+* take pe for an example, if you bind event `pe`,`pe->basketball`, `pe->basketball->shooting`, `pe->football->defence`, then you can trigger one of them or a tree flexibly.
 * bind Event:
 
 ```js
